@@ -1,0 +1,34 @@
+`timescale 1ns/1ps
+module reg_file_tb;
+    reg        clk, we;
+    reg  [3:0] raddr1, raddr2, waddr;
+    reg  [7:0] wdata;
+    wire [7:0] rdata1, rdata2;
+
+    reg_file dut(
+        .clk(clk), .we(we),
+        .raddr1(raddr1), .raddr2(raddr2),
+        .waddr(waddr), .wdata(wdata),
+        .rdata1(rdata1), .rdata2(rdata2)
+    );
+
+    // clock
+    initial clk = 0;
+    always  #5 clk = ~clk;
+
+    initial begin
+        $display(" time  we waddr wdata | raddr1 rdata1  raddr2 rdata2");
+
+        // write AA to R1 (on falling edge)
+        we=1; waddr=4'h1; wdata=8'hAA; raddr1=4'h1; raddr2=4'h0; #12;
+
+        // disable write, read back
+        we=0;                    raddr1=4'h1; raddr2=4'h0; #10;
+
+        // write 55 to R3, read R1 and R3
+        we=1; waddr=4'h3; wdata=8'h55;             #12;
+        we=0;                raddr1=4'h1; raddr2=4'h3; #10;
+
+        $stop;
+    end
+endmodule
