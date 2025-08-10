@@ -1,0 +1,26 @@
+`timescale 1ns/1ps
+module alu_1bit_tb;
+    reg  a, b, cin;
+    reg  [1:0] op;
+    wire result, cout;
+
+    alu_1bit dut(.a(a), .b(b), .cin(cin), .op(op), .result(result), .cout(cout));
+
+    initial begin
+        $display(" time  op  a b cin | result cout");
+        a=1; b=0; cin=0;
+
+        op=2'b00; #10; // ADD
+        op=2'b01; #10; // SUB
+        op=2'b10; #10; // AND
+        op=2'b11; #10; // OR
+
+        a=1; b=1; cin=1;
+        op=2'b00; #10;
+        op=2'b01; #10;
+        op=2'b10; #10;
+        op=2'b11; #10;
+
+        $stop;
+    end
+endmodule
